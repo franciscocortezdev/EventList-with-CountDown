@@ -21,7 +21,7 @@ window.addEventListener("load", function() {
 function addEvent (e) {
     
     if (!inputText.value == '' && !inputDate.value == ''){
-        Events.push({
+        Events.unshift({
             Event: inputText.value,
             Date: inputDate.value  
         })
