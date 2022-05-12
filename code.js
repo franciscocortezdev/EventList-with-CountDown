@@ -92,7 +92,7 @@ function createItem(hoursLeft,daysLeft,item){
 
     pCount.innerText = hoursLeft<=24 ?"Horas faltantes: " + hoursLeft : "Dias faltastes: " + daysLeft;
     pDes.innerText = item.Event;
-    pDat.innerText = item.Date;
+    pDat.innerText = item.Date.slice(0, 10).replaceAll('-', '/');
     btnDelete.innerText = 'Eliminar';
     
     divP.append(pCount,pDes,pDat);
