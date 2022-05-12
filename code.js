@@ -2,7 +2,9 @@ const btnAgregar = document.querySelector('.btnAgregar').addEventListener('click
 const inputText = document.querySelector('.inputText');
 const inputDate = document.querySelector('.inputDate');
 const listContainer = document.querySelector('.list_container');
-const Events = [];
+const btnsDelete = document.querySelectorAll('.btn_delete');
+let Events = [];
+let idItem = 0;
 
 window.addEventListener("load", function(event) {
     if (getEvents() == null){
@@ -18,26 +20,26 @@ window.addEventListener("load", function(event) {
   });
 
 function addEvent (e) {
+    
     if (!inputText.value == '' && !inputDate.value == ''){
         Events.push({
+            id: idItem,
             Status: true,
             Event: inputText.value,
             Date: inputDate.value  
         })
-    
-        inputText.value = '';
-        inputDate.value = '';
-        listContainer.innerHTML = '';
-        storeEvents();
+        idItem ++;
+        
+        storeEvents(Events);
         listEvent()
     }
     
 }
 
 
-function storeEvents(){
+function storeEvents(events){
     
-    localStorage.setItem('tareas', JSON.stringify(Events));
+    localStorage.setItem('tareas', JSON.stringify(events));
 
 }
 
@@ -45,8 +47,11 @@ function storeEvents(){
 
 
 function listEvent(){
+    inputText.value = '';
+    inputDate.value = '';
+    listContainer.innerHTML = '';
     let list = getEvents();
-
+    
     list.forEach(item => {
         
         const dateStart = new Date().getTime();
@@ -54,26 +59,80 @@ function listEvent(){
         let hoursLeft = Math.round(((dateEnd - dateStart)/(1000*60*60)));
         let daysLeft = Math.trunc(((dateEnd - dateStart)/(1000*60*60*24)));
         
+        createItem(hoursLeft, daysLeft,item);
         
-        listContainer.innerHTML += `
-        <div class="item">
-                <div>
-                    <p class="item_CountDown">${hoursLeft<=24 ?"Horas faltantes: " + hoursLeft : "Dias faltastes: " + daysLeft }</p>
-                    <p class="item_description">${item.Event}</p>
-                    <p class="item_date">${item.Date}</p>
-                </div>
-                <button class="btn_delete">
-                    Eliminar
-                </button>
-               
-            </div>
-        `
     });
    
 }
 
+
 function getEvents(){
     let eventList = JSON.parse(localStorage.getItem('tareas'))
-    
+    Events = [...eventList];
     return eventList;
 }
+
+function createItem(hoursLeft,daysLeft,item){
+
+    let divItem = document.createElement('div');
+    let divP = document.createElement('div');
+    let pCount = document.createElement('p');
+    let pDes = document.createElement('p');
+    let pDat = document.createElement('p');
+    let btnDelete = document.createElement('button');
+
+    divItem.classList.add('items');
+    divP.classList.add('divP');
+    pCount.classList.add('item_CountDown');
+    pDes.classList.add('item_description');
+    pDat.classList.add('item_date');
+    btnDelete.classList.add('btn_delete');
+    btnDelete.setAttribute("id",item.Date);
+    btnDelete.addEventListener('click', deleteItem);
+
+    pCount.innerText = hoursLeft<=24 ?"Horas faltantes: " + hoursLeft : "Dias faltastes: " + daysLeft;
+    pDes.innerText = item.Event;
+    pDat.innerText = item.Date;
+    btnDelete.innerText = 'Eliminar';
+    
+    divP.append(pCount,pDes,pDat);
+    divItem.append(divP, btnDelete);
+
+    listContainer.append(divItem);
+
+}
+
+
+function deleteItem (e){
+    let newEvents = [];
+
+    Events.forEach(element => {
+        
+        if(element.Date !== e.target.id){
+       
+            newEvents.push(element);
+        }
+    });
+
+    Events = [...newEvents];
+    storeEvents(Events);
+    listEvent()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
