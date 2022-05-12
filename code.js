@@ -24,7 +24,6 @@ function addEvent (e) {
     if (!inputText.value == '' && !inputDate.value == ''){
         Events.push({
             id: idItem,
-            Status: true,
             Event: inputText.value,
             Date: inputDate.value  
         })
@@ -56,10 +55,11 @@ function listEvent(){
         
         const dateStart = new Date().getTime();
         const dateEnd = new Date(item.Date).getTime();
+        let minLeft = Math.round(((dateEnd - dateStart)/(1000*60)));
         let hoursLeft = Math.round(((dateEnd - dateStart)/(1000*60*60)));
         let daysLeft = Math.trunc(((dateEnd - dateStart)/(1000*60*60*24)));
         
-        createItem(hoursLeft, daysLeft,item);
+        createItem(hoursLeft, daysLeft, minLeft, item);
         
     });
    
@@ -72,7 +72,7 @@ function getEvents(){
     return eventList;
 }
 
-function createItem(hoursLeft,daysLeft,item){
+function createItem(hoursLeft,daysLeft,minLeft,item){
 
     let divItem = document.createElement('div');
     let divP = document.createElement('div');
@@ -90,7 +90,7 @@ function createItem(hoursLeft,daysLeft,item){
     btnDelete.setAttribute("id",item.Date);
     btnDelete.addEventListener('click', deleteItem);
 
-    pCount.innerText = hoursLeft<=24 ?"Horas faltantes: " + hoursLeft : "Dias faltastes: " + daysLeft;
+    pCount.innerText = timeLeft(hoursLeft,daysLeft,minLeft,divItem);
     pDes.innerText = item.Event;
     pDat.innerText = item.Date.slice(0, 10).replaceAll('-', '/');
     btnDelete.innerText = 'Eliminar';
@@ -102,6 +102,20 @@ function createItem(hoursLeft,daysLeft,item){
 
 }
 
+function timeLeft(hoursLeft,daysLeft,minLeft,divItem){
+        
+        if(minLeft <= 0){
+            divItem.classList.add('itemFinish');
+            return "Tiempo terminado";
+        }
+        if (hoursLeft <= 0){
+            return "Minutos faltantes: " + minLeft;
+        }
+        if (hoursLeft<=24){
+            return "Horas faltantes: " + hoursLeft;
+        }
+        return "Dias faltantes: " + daysLeft;
+}
 
 function deleteItem (e){
     let newEvents = [];
