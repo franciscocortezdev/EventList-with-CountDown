@@ -3,36 +3,34 @@ const inputText = document.querySelector('.inputText');
 const inputDate = document.querySelector('.inputDate');
 const listContainer = document.querySelector('.list_container');
 const btnsDelete = document.querySelectorAll('.btn_delete');
-let Events = [];
-let idItem = 0;
 
-window.addEventListener("load", function(event) {
-    if (getEvents() == null){
-        listContainer.innerHTML = `
-            <div class="msg_container">
-                <p class="msg_p">No hay eventos</p>
-            </div>
-        `
-        return;
-    }
+document.addEventListener('keydown', (e)=> e.key == 'Enter'? addEvent(): false);
+let Events = [];
+
+
+window.addEventListener("load", function() {
     listEvent()
+    setInterval(()=>{
+        listEvent()
+    }, 30000)
+    
 
   });
+
 
 function addEvent (e) {
     
     if (!inputText.value == '' && !inputDate.value == ''){
         Events.push({
-            id: idItem,
             Event: inputText.value,
             Date: inputDate.value  
         })
-        idItem ++;
-        
         storeEvents(Events);
         listEvent()
+        inputText.value = '';
+        inputText.focus();
+        inputDate.value = '';
     }
-    
 }
 
 
@@ -43,14 +41,22 @@ function storeEvents(events){
 }
 
 
-
-
 function listEvent(){
-    inputText.value = '';
-    inputDate.value = '';
-    listContainer.innerHTML = '';
-    let list = getEvents();
     
+    listContainer.innerHTML = '';
+
+    if (getEvents() == null || getEvents().length < 1){
+
+        listContainer.innerHTML = `
+            <div class="msg_container">
+                <p class="msg_p">No hay eventos</p>
+            </div>
+        `
+     
+    }
+
+    let list = getEvents();
+
     list.forEach(item => {
         
         const dateStart = new Date().getTime();
@@ -119,11 +125,8 @@ function timeLeft(hoursLeft,daysLeft,minLeft,divItem){
 
 function deleteItem (e){
     let newEvents = [];
-
     Events.forEach(element => {
-        
         if(element.Date !== e.target.id){
-       
             newEvents.push(element);
         }
     });

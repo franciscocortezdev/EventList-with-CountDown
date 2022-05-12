@@ -19,8 +19,8 @@ body{
 .container{
     background-color: var(--darkblue);
     width: 600px;
-    margin: 0 auto;
-    margin-top: 40px;
+    margin: 40px auto;
+    
     padding: 20px;
     border-radius: 20px;
     box-shadow: 0 0 10px #000;
@@ -28,6 +28,7 @@ body{
 .form{
     width: 100%;
     margin: 40px auto;
+    margin-top: 20px;
     display: flex;
     justify-content: space-between;
 }
@@ -147,6 +148,24 @@ body{
 
 
 
+.head_title{
+    font-size: 30px;
+    font-weight: 900;
+    color: var(--fondo);
+    
+}
+
+.msg_container{
+    background-color: var(--fondo);
+    padding: 10px 10px;
+    border-radius: 5px;
+}
+
+.msg_p{
+    font-size: 30px;
+    line-height: 1;
+    font-weight: bold;
+}
 
 
 
