@@ -90,9 +90,9 @@ function createItem(hoursLeft,daysLeft,minLeft,item){
     btnDelete.setAttribute("id",item.Date);
     btnDelete.addEventListener('click', deleteItem);
 
-    pCount.innerText = timeLeft(hoursLeft,daysLeft,minLeft,divItem);
+    pCount.innerHTML = timeLeft(hoursLeft,daysLeft,minLeft,divItem);
     pDes.innerText = item.Event;
-    pDat.innerText = item.Date.slice(0, 10).replaceAll('-', '/');
+    pDat.innerText = item.Date.replaceAll('-', '/').replace('T', ' ');
     btnDelete.innerText = 'Eliminar';
     
     divP.append(pCount,pDes,pDat);
@@ -106,15 +106,15 @@ function timeLeft(hoursLeft,daysLeft,minLeft,divItem){
         
         if(minLeft <= 0){
             divItem.classList.add('itemFinish');
-            return "Tiempo terminado";
+            return "Tiempo Terminado";
         }
         if (hoursLeft <= 0){
-            return "Minutos faltantes: " + minLeft;
+            return `<span class="countDownS">${minLeft}</span><p class="countDownP">Minutos</p>`;
         }
         if (hoursLeft<=24){
-            return "Horas faltantes: " + hoursLeft;
+            return `<span class="countDownS">${hoursLeft}</span><p class="countDownP">Horas</p>`;
         }
-        return "Dias faltantes: " + daysLeft;
+        return `<span class="countDownS">${daysLeft}</span><p class="countDownP">Dias</p>`;
 }
 
 function deleteItem (e){
